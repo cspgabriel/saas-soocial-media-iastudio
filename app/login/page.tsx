@@ -96,6 +96,15 @@ export default function LoginPage() {
               </button>
             </div>
             
+            <div className="mt-4">
+              <Link
+                href="/dashboard"
+                className="flex w-full justify-center rounded-xl bg-white border border-slate-200 py-3 px-4 text-sm font-bold text-slate-700 shadow-sm hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 focus:ring-offset-2 transition-all"
+              >
+                Acessar como Visitante
+              </Link>
+            </div>
+            
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">

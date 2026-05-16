@@ -1,7 +1,17 @@
+'use client';
+
+import { useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { TopNav } from './TopNav';
+import { FloatingChatbot } from './FloatingChatbot';
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    }
+  }, []);
+
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50 text-slate-900 font-sans selection:bg-teal-500/30">
       <Sidebar />
@@ -15,6 +25,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </main>
       </div>
+      <FloatingChatbot />
     </div>
   );
 }

@@ -3,8 +3,9 @@
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'motion/react';
 import { Button } from '@/components/ui';
-import { ArrowRight, CheckCircle2, LayoutDashboard, Sparkles, CalendarDays, Users, Zap, Shield, PlayCircle, X } from 'lucide-react';
+import { ArrowRight, CheckCircle2, LayoutDashboard, Sparkles, CalendarDays, Users, Zap, Shield, PlayCircle, X, PieChart, Activity, FileText, Database, Bot, Megaphone, Images, Calculator } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { FloatingChatbot } from '@/components/FloatingChatbot';
 
 export default function LandingPage() {
   const [isAnnual, setIsAnnual] = useState(true);
@@ -118,7 +119,7 @@ export default function LandingPage() {
                    Testar 7 dias grátis <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
-              <Link href="#demo">
+              <Link href="/dashboard">
                 <Button variant="outline" className="h-12 px-8 text-base rounded-full bg-white flex items-center gap-2 w-full sm:w-auto hover:bg-slate-50 transition-colors">
                   <PlayCircle className="w-5 h-5 text-slate-500" /> Ver Demonstração
                 </Button>
@@ -261,34 +262,70 @@ export default function LandingPage() {
               bg="bg-amber-50"
             />
             <FeatureCard 
-              icon={<Users className="w-6 h-6 text-blue-500" />}
-              title="Aprovação sem Estresse"
-              description="Chega de enviar imagens pelo WhatsApp. Envie um 'Link Mágico' para seus clientes aprovarem ou comentarem nos posts sem precisarem criar conta."
-              bg="bg-blue-50"
-            />
-            <FeatureCard 
-              icon={<CalendarDays className="w-6 h-6 text-teal-500" />}
-              title="Agendamento Simplificado"
-              description="Arraste e solte posts em um calendário intuitivo. Esqueça alarmes do celular e publique automaticamente nas principais redes."
-              bg="bg-teal-50"
-            />
-            <FeatureCard 
-              icon={<Sparkles className="w-6 h-6 text-indigo-500" />}
-              title="Geração de Textos com IA"
-              description="Ficou sem criatividade? Escreva legendas persuasivas e hashtags em segundos usando nossa IA treinada para alcance."
-              bg="bg-indigo-50"
-            />
-            <FeatureCard 
-              icon={<Zap className="w-6 h-6 text-rose-500" />}
-              title="Fluxos Automatizados"
-              description="Reduza trabalho manual. Crie alertas automáticos quando clientes aprovarem posts ou se um conteúdo falhar."
+              icon={<PieChart className="w-6 h-6 text-rose-500" />}
+              title="Relatórios Exportáveis"
+              description="Mostre o valor do seu trabalho! Acompanhe o crescimento de cada perfil e exporte relatórios consolidados para enviar aos clientes."
               bg="bg-rose-50"
             />
             <FeatureCard 
-              icon={<Shield className="w-6 h-6 text-emerald-500" />}
-              title="Segurança Avançada"
-              description="Conecte contas sociais da agência uma vez, e ofereça acesso à equipe sem compartilhar senhas diretas."
+              icon={<CalendarDays className="w-6 h-6 text-teal-500" />}
+              title="Agendamento Visual"
+              description="Arraste e solte posts em um calendário intuitivo. Esqueça alarmes do celular e deixe nosso sistema publicar nos melhores horários."
+              bg="bg-teal-50"
+            />
+            <FeatureCard 
+              icon={<Activity className="w-6 h-6 text-fuchsia-500" />}
+              title="Auditoria de Perfil IA"
+              description="Deixe a nossa IA analisar as métricas e o perfil do seu cliente para fornecer planos de ação reais baseados em dados, não em achismo."
+              bg="bg-fuchsia-50"
+            />
+            <FeatureCard 
+              icon={<Bot className="w-6 h-6 text-sky-500" />}
+              title="Assistente IA Dedicado"
+              description="Ficou sem criatividade? Nosso Chatbot flutuante trabalha com você o tempo todo, sugerindo copys, roteiros e CTAs matadores."
+              bg="bg-sky-50"
+            />
+            <FeatureCard 
+              icon={<Users className="w-6 h-6 text-blue-500" />}
+              title="Aprovação Simplificada"
+              description="Chega de enviar imagens pelo WhatsApp. Envie um 'Link Mágico' para clientes aprovarem e comentarem nos posts na hora."
+              bg="bg-blue-50"
+            />
+            <FeatureCard 
+              icon={<Database className="w-6 h-6 text-violet-500" />}
+              title="Biblioteca de Prompts"
+              description="Tenha em mãos dezenas de prompts validados para copiar, colar e usar no ChatGPT, Claude ou Gemini sem precisar testar do zero."
+              bg="bg-violet-50"
+            />
+            <FeatureCard 
+              icon={<Megaphone className="w-6 h-6 text-fuchsia-500" />}
+              title="Criador de Campanhas Ads"
+              description="Escreva prompts para campanhas do Meta, Google, TikTok e LinkedIn Ads estruturadas com IA, sugerindo objetivos e textos milionários."
+              bg="bg-fuchsia-50"
+            />
+            <FeatureCard 
+              icon={<Images className="w-6 h-6 text-amber-500" />}
+              title="Gerador de Carrosséis IA"
+              description="Transforme qualquer texto, matéria ou URL em um roteiro matador para carrosséis do Instagram, já separados slide por slide com sugestão visual."
+              bg="bg-amber-50"
+            />
+            <FeatureCard 
+              icon={<Calculator className="w-6 h-6 text-slate-500" />}
+              title="10 Calculadoras para Agências"
+              description="Acesse calculadoras automáticas de ROI, ROAS, CPC, CPA, LTV, CAC, Margem de Lucro da agência e preço de Hora/Projeto de forma fácil."
+              bg="bg-slate-100"
+            />
+            <FeatureCard 
+              icon={<FileText className="w-6 h-6 text-emerald-500" />}
+              title="Gerador de Contratos"
+              description="Crie e exporte contratos de 'Social Media' formais em segundos para novos clientes, protegendo seu negócio de calotes."
               bg="bg-emerald-50"
+            />
+            <FeatureCard 
+              icon={<Sparkles className="w-6 h-6 text-indigo-500" />}
+              title="Geração de Posts e Legendas"
+              description="Crie ideias para carrosséis, reels e legendas focadas em vendas com apenas um clique usando a API nativa do Gemini."
+              bg="bg-indigo-50"
             />
           </div>
         </div>
@@ -481,6 +518,9 @@ export default function LandingPage() {
           </p>
         </div>
       </footer>
+      
+      {/* Global Floating Chatbot */}
+      <FloatingChatbot />
     </div>
   );
 }

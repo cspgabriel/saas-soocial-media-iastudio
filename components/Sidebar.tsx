@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, CalendarDays, Sparkles, PieChart, Settings, Calculator, Activity } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarDays, Sparkles, PieChart, Settings, Calculator, Activity, FileText, Megaphone, Images } from 'lucide-react';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -9,6 +9,10 @@ const navigation = [
   { name: 'AI Generator', href: '/ai', icon: Sparkles },
   { name: 'Análise de Perfil', href: '/analysis', icon: Activity },
   { name: 'Relatórios', href: '/reports', icon: PieChart },
+  { name: 'Prompts IA', href: '/prompts', icon: Sparkles },
+  { name: 'Contratos', href: '/contracts', icon: FileText },
+  { name: 'Criador de Campanhas', href: '/ads', icon: Megaphone },
+  { name: 'Gerador Carrossel', href: '/carousel', icon: Images },
   { name: 'Calculadoras', href: '/calculators', icon: Calculator },
 ];
 
