@@ -45,36 +45,36 @@ export default function AIPage() {
     <Layout>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight gap-2 flex items-center">
-            AI Content Genius <span className="text-[10px] bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-medium tracking-wider border border-slate-700 ml-2">BETA</span>
+          <h1 className="text-2xl font-bold text-slate-800 tracking-tight gap-2 flex items-center">
+            AI Content Genius <span className="text-[10px] bg-slate-100 px-2 py-0.5 rounded text-slate-600 font-medium tracking-wider border border-slate-200 ml-2">BETA</span>
           </h1>
-          <p className="text-slate-400 mt-0.5 text-sm">Gere postagens e legendas otimizadas com IA.</p>
+          <p className="text-slate-500 mt-0.5 text-sm">Gere postagens e legendas otimizadas com IA.</p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="border-slate-700/50 flex flex-col">
+        <Card className="border-slate-200/60 shadow-sm flex flex-col bg-white">
           <CardHeader>
             <CardTitle>Nova Publicação</CardTitle>
           </CardHeader>
           <CardContent className="space-y-5 flex-1 flex flex-col">
             <div className="flex-1 flex flex-col">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Sobre o que é a postagem?</label>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Sobre o que é a postagem?</label>
               <textarea 
                 value={prompt}
                 onChange={e => setPrompt(e.target.value)}
                 placeholder="Ex: Lançamento do novo perfume floral, focando em elegância e frescor..."
-                className="w-full flex-1 min-h-[140px] rounded-xl border border-slate-700 bg-slate-900/80 p-4 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 resize-none text-slate-200 placeholder:text-slate-500 transition-all font-mono"
+                className="w-full flex-1 min-h-[140px] rounded-xl border border-slate-200 bg-slate-50 p-4 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 resize-none text-slate-800 placeholder:text-slate-400 transition-all font-mono"
               />
             </div>
             
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Tom de voz</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Tom de voz</label>
                 <select 
                   value={tone}
                   onChange={e => setTone(e.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-900/80 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 text-slate-200 appearance-none"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 text-slate-800 appearance-none cursor-pointer"
                 >
                   <option value="descontraído">Descontraído & Divertido</option>
                   <option value="profissional">Profissional & Corporativo</option>
@@ -83,11 +83,11 @@ export default function AIPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Rede Social</label>
+                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Rede Social</label>
                 <select 
                   value={platform}
                   onChange={e => setPlatform(e.target.value)}
-                  className="w-full rounded-xl border border-slate-700 bg-slate-900/80 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 text-slate-200 appearance-none"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 text-slate-800 appearance-none cursor-pointer"
                 >
                   <option value="instagram">Instagram</option>
                   <option value="linkedin">LinkedIn</option>
@@ -114,31 +114,31 @@ export default function AIPage() {
         <div className="h-full">
           {result ? (
             <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="h-full">
-              <Card className="h-full flex flex-col border-teal-500/30 bg-gradient-to-br from-teal-900/20 to-blue-900/20">
-                <CardHeader className="flex flex-row items-center justify-between border-slate-700/50 bg-slate-900/30">
+              <Card className="h-full flex flex-col border-teal-200 bg-teal-50/50 shadow-sm">
+                <CardHeader className="flex flex-row items-center justify-between border-teal-200 bg-white/50">
                   <CardTitle>Resultado</CardTitle>
                   <div className="flex gap-2">
-                    <Button variant="ghost" className="p-2 h-auto" onClick={generateContent}>
+                    <Button variant="ghost" className="p-2 h-auto text-slate-500 hover:text-slate-800" onClick={generateContent}>
                       <RefreshCw className="w-4 h-4" />
                     </Button>
-                    <Button variant="ghost" className="p-2 h-auto" onClick={copyToClipboard}>
-                      {copied ? <Check className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
+                    <Button variant="ghost" className="p-2 h-auto text-slate-500 hover:text-slate-800" onClick={copyToClipboard}>
+                      {copied ? <Check className="w-4 h-4 text-teal-600" /> : <Copy className="w-4 h-4" />}
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="flex-1 overflow-y-auto max-h-[450px] scrollbar-thin scrollbar-thumb-slate-700">
-                  <div className="prose prose-sm prose-invert max-w-none whitespace-pre-wrap font-sans text-slate-300">
+                <CardContent className="flex-1 overflow-y-auto max-h-[450px] scrollbar-thin scrollbar-thumb-teal-200">
+                  <div className="prose prose-sm max-w-none whitespace-pre-wrap font-sans text-slate-800">
                     {result}
                   </div>
                 </CardContent>
               </Card>
             </motion.div>
           ) : (
-            <div className="h-full border border-dashed border-slate-700/50 rounded-2xl flex flex-col items-center justify-center p-8 text-center bg-slate-800/10 min-h-[450px]">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 accent-gradient shadow-lg shadow-teal-500/20 opacity-50">
+            <div className="h-full border border-dashed border-slate-300 rounded-2xl flex flex-col items-center justify-center p-8 text-center bg-slate-50/50 min-h-[450px]">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mb-4 accent-gradient shadow-lg shadow-teal-500/20 opacity-80">
                 <Sparkles className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-lg font-bold text-slate-300 mb-2">Pronto para a magia</h3>
+              <h3 className="text-lg font-bold text-slate-700 mb-2">Pronto para a magia</h3>
               <p className="text-slate-500 text-sm max-w-sm">
                 Descreva sua ideia e a inteligência artificial criará uma legenda perfeita, com hashtags e otimização para a rede social.
               </p>
