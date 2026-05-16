@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Megaphone, LayoutGrid, Loader2 } from 'lucide-react';
+import { Megaphone, LayoutGrid, Loader2, User } from 'lucide-react';
 import Markdown from 'react-markdown';
+import { mockClients } from '@/app/data/mockClients';
 
 export default function AdsPage() {
   const [platform, setPlatform] = useState('Meta Ads');
+  const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [formData, setFormData] = useState({
     objective: '',
     targetAudience: '',
@@ -23,6 +25,23 @@ export default function AdsPage() {
     { id: 'TikTok Ads', name: 'TikTok Ads', color: 'text-black', bg: 'bg-slate-100' },
     { id: 'LinkedIn Ads', name: 'LinkedIn Ads', color: 'text-sky-700', bg: 'bg-sky-50' }
   ];
+
+  const handleClientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const cid = e.target.value;
+    setSelectedClientId(cid);
+    
+    if (cid) {
+      const client = mockClients.find(c => c.id.toString() === cid);
+      if (client) {
+        setFormData(prev => ({
+          ...prev,
+          product: `Empresa: ${client.companyInfo || client.name}\nServiços: ${client.services}\nProdutos: ${client.products}`
+        }));
+      }
+    } else {
+      setFormData(prev => ({ ...prev, product: '' }));
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,20 +98,33 @@ export default function AdsPage() {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1 flex items-center gap-2">
+                  <User className="w-4 h-4" /> Selecione o Cliente (Opcional)
+                </label>
+                <select 
+                  value={selectedClientId}
+                  onChange={handleClientChange}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-800/30 bg-white"
+                >
+                  <option value="">-- Escolha um cliente para auto-preencher --</option>
+                  {mockClients.map(c => (
+                    <option key={c.id} value={c.id}>{c.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Qual o objetivo da campanha?</label>
                 <input 
-                  required
                   type="text" 
                   value={formData.objective}
                   onChange={e => setFormData({...formData, objective: e.target.value})}
                   className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-slate-800/30"
-                  placeholder="Ex: Vendas, Captação de Leads, WhatsApp"
+                  placeholder="Ex: Vendas, Captação de Leads, Visitas ao Perfil"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1">Público-Alvo</label>
                 <input 
-                  required
                   type="text" 
                   value={formData.targetAudience}
                   onChange={e => setFormData({...formData, targetAudience: e.target.value})}
@@ -101,7 +133,7 @@ export default function AdsPage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">O que estamos anunciando? (Produto/Oferta)</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1">O que estamos anunciando? (Contexto/Produto)</label>
                 <textarea 
                   required
                   value={formData.product}

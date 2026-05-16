@@ -3,15 +3,30 @@
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Images, Loader2, FileText, Link as LinkIcon, Image as ImageIcon } from 'lucide-react';
+import { Images, Loader2, FileText, Link as LinkIcon, Image as ImageIcon, User } from 'lucide-react';
 import Markdown from 'react-markdown';
+import { mockClients } from '@/app/data/mockClients';
 
 export default function CarouselPage() {
   const [inputType, setInputType] = useState<'text' | 'url' | 'file'>('text');
+  const [selectedClientId, setSelectedClientId] = useState<string>('');
   const [sourceText, setSourceText] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
   const [result, setResult] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleClientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const cid = e.target.value;
+    setSelectedClientId(cid);
+    
+    if (cid) {
+      const client = mockClients.find(c => c.id.toString() === cid);
+      if (client) {
+        setSourceText(`Empresa: ${client.companyInfo || client.name}\nServiços: ${client.services}\nProdutos: ${client.products}\n\nFaça um carrossel sobre: [DIGITE AQUI O TEMA]`);
+      }
+    } else {
+      setSourceText('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,6 +100,20 @@ export default function CarouselPage() {
               <form onSubmit={handleSubmit} className="space-y-4">
                 {inputType === 'text' && (
                   <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2 flex items-center gap-2">
+                      <User className="w-4 h-4" /> Selecione o Cliente (Para preencher o contexto)
+                    </label>
+                    <select 
+                      value={selectedClientId}
+                      onChange={handleClientChange}
+                      className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30 bg-white mb-4"
+                    >
+                      <option value="">-- Automático com dados do Cliente --</option>
+                      {mockClients.map(c => (
+                        <option key={c.id} value={c.id}>{c.name}</option>
+                      ))}
+                    </select>
+                    
                     <label className="block text-sm font-medium text-slate-700 mb-2">Cole o texto, conteúdo ou ideia</label>
                     <textarea 
                       required

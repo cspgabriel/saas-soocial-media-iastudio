@@ -3,20 +3,94 @@
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Search, Plus, MoreVertical, FileText, CheckCircle, Clock } from 'lucide-react';
+import { Search, Plus, MoreVertical, FileText, CheckCircle, Clock, ChevronLeft } from 'lucide-react';
 import { motion } from 'motion/react';
-
-const clients = [
-  { id: 1, name: 'Cafeteria Blend', status: 'Ativo', plan: 'Premium (12 posts)', nextRenew: '15/Jun/2026', unread: 2 },
-  { id: 2, name: 'TechStart Inc', status: 'Onboarding', plan: 'Basic (8 posts)', nextRenew: '-', unread: 0 },
-  { id: 3, name: 'Dr. Roberto - Dentista', status: 'Ativo', plan: 'Pro (20 posts)', nextRenew: '22/Jun/2026', unread: 5 },
-  { id: 4, name: 'Boutique da Moda', status: 'Inativo', plan: 'Basic', nextRenew: '-', unread: 0 },
-];
+import { mockClients } from '@/app/data/mockClients';
 
 export default function ClientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedClient, setSelectedClient] = useState<typeof mockClients[0] | null>(null);
+  const [formData, setFormData] = useState({ companyInfo: '', services: '', products: '' });
 
-  const filtered = clients.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filtered = mockClients.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  const handleSelectClient = (client: typeof mockClients[0]) => {
+    setSelectedClient(client);
+    setFormData({
+      companyInfo: client.companyInfo || '',
+      services: client.services || '',
+      products: client.products || ''
+    });
+  };
+
+  const handleSaveInfo = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedClient) {
+      // Aqui haveria uma chamada a API para salvar as alterações.
+      alert(`Informações atualizadas para: ${selectedClient.name}`);
+    }
+  };
+
+  if (selectedClient) {
+    return (
+      <Layout>
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <Button variant="ghost" className="mb-2 -ml-3 text-slate-500" onClick={() => setSelectedClient(null)}>
+              <ChevronLeft className="w-4 h-4 mr-1" /> Voltar
+            </Button>
+            <h1 className="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm">
+                {selectedClient.name.charAt(0)}
+              </div>
+              {selectedClient.name}
+            </h1>
+            <p className="text-slate-500 mt-1 text-sm">Preencha as informações base deste cliente, que servirão como contexto (Briefing) para a IA.</p>
+          </div>
+        </div>
+
+        <Card className="border-slate-200/60 shadow-sm max-w-3xl">
+          <CardHeader>
+            <CardTitle>Base de Conhecimento do Cliente</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSaveInfo} className="space-y-6">
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-2">Sobre a Empresa (O que faz, qual a promessa, tom de voz)</label>
+                <textarea 
+                  value={formData.companyInfo}
+                  onChange={e => setFormData({...formData, companyInfo: e.target.value})}
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 min-h-[100px]"
+                  placeholder="Descreva a empresa..."
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-2">Serviços Oferecidos</label>
+                <textarea 
+                  value={formData.services}
+                  onChange={e => setFormData({...formData, services: e.target.value})}
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 min-h-[80px]"
+                  placeholder="Quais serviços a empresa presta?"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-800 mb-2">Produtos Oferecidos</label>
+                <textarea 
+                  value={formData.products}
+                  onChange={e => setFormData({...formData, products: e.target.value})}
+                  className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 min-h-[80px]"
+                  placeholder="Quais produtos físicos ou infoprodutos são vendidos?"
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white rounded-xl h-11 px-8">Salvar Informações</Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -65,7 +139,8 @@ export default function ClientsPage() {
                   animate={{ opacity: 1 }}
                   transition={{ delay: i * 0.05 }}
                   key={client.id} 
-                  className="hover:bg-slate-50 transition-colors"
+                  className="hover:bg-slate-50 transition-colors cursor-pointer"
+                  onClick={() => handleSelectClient(client)}
                 >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
