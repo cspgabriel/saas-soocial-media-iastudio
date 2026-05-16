@@ -246,6 +246,100 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Comparison Section */}
+      <section className="py-24 bg-slate-900 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none mix-blend-overlay"></div>
+        <div className="max-w-6xl mx-auto relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">O que separa Gestores Exaustos de Gestores Escaláveis?</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">Ter ferramentas ou ter processos? Veja a diferença no dia a dia da sua agência.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Without System */}
+            <div className="bg-slate-800/50 border border-slate-700/50 rounded-3xl p-8 backdrop-blur-sm">
+              <div className="flex items-center gap-3 mb-8">
+                <div className="w-12 h-12 rounded-full bg-rose-500/20 flex items-center justify-center border border-rose-500/30">
+                  <X className="w-6 h-6 text-rose-400" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-200">Sem o SocialOS</h3>
+              </div>
+              <ul className="space-y-6">
+                <li className="flex gap-4">
+                  <div className="mt-1 text-rose-400 opacity-80"><X className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-slate-200 block mb-1">Aprovações pelo WhatsApp</strong>
+                    <p className="text-slate-400 text-sm leading-relaxed">Imagens perdem qualidade, áudios enormes pedindo alterações e você caçando feedback no meio de &quot;Bom dias&quot;.</p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="mt-1 text-rose-400 opacity-80"><X className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-slate-200 block mb-1">Bloqueio Criativo</strong>
+                    <p className="text-slate-400 text-sm leading-relaxed">Horas encarando a tela em branco ou o Chat GPT raiz sem contexto tentando achar ideias que prestem e não pareçam robóticas.</p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="mt-1 text-rose-400 opacity-80"><X className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-slate-200 block mb-1">Calculadora de padaria</strong>
+                    <p className="text-slate-400 text-sm leading-relaxed">Fechando projetos sem saber a margem de lucro exata ou quanto cobrar para o negócio realmente valer a pena.</p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="mt-1 text-rose-400 opacity-80"><X className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-slate-200 block mb-1">Influenciadores soltos</strong>
+                    <p className="text-slate-400 text-sm leading-relaxed">Perdendo contato de parcerias e sem histórico de quanto geraram de ROI nas campanhas passadas.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* With System */}
+            <div className="bg-teal-900/20 border border-teal-500/30 rounded-3xl p-8 backdrop-blur-sm relative overflow-hidden">
+              <div className="absolute -top-10 -right-10 w-40 h-40 bg-teal-500/20 blur-3xl rounded-full" />
+              <div className="flex items-center gap-3 mb-8 relative z-10">
+                <div className="w-12 h-12 rounded-full bg-teal-500/20 flex items-center justify-center border border-teal-500/30">
+                  <CheckCircle2 className="w-6 h-6 text-teal-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white">Com o SocialOS</h3>
+              </div>
+              <ul className="space-y-6 relative z-10">
+                <li className="flex gap-4">
+                  <div className="mt-1 text-teal-400"><CheckCircle2 className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-white block mb-1">Links Mágicos de Aprovação</strong>
+                    <p className="text-slate-300 text-sm leading-relaxed">Cliente recebe link, clica, comenta na imagem, aprova e o post já fica pronto pro agendamento. Simples.</p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="mt-1 text-teal-400"><CheckCircle2 className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-white block mb-1">Assistente de Copy & Ads Inteligente</strong>
+                    <p className="text-slate-300 text-sm leading-relaxed">Carrosséis criados do zero, prompts validados e campanhas pro Meta montadas em 2 minutos via IA nativa.</p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="mt-1 text-teal-400"><CheckCircle2 className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-white block mb-1">Calculadoras Integradas</strong>
+                    <p className="text-slate-300 text-sm leading-relaxed">LTV, CAC, Margem, ROI, ROAS. Pare de &quot;chutar&quot; e gerencie sua agência baseada em números exatos.</p>
+                  </div>
+                </li>
+                <li className="flex gap-4">
+                  <div className="mt-1 text-teal-400"><CheckCircle2 className="w-5 h-5" /></div>
+                  <div>
+                    <strong className="text-white block mb-1">Roaster de Influenciadores</strong>
+                    <p className="text-slate-300 text-sm leading-relaxed">Cadastre influenciadores, mapeie o ROI real que trouxeram nas campanhas e construa um banco de talentos próprio.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Grid */}
       <section id="features" className="py-24 bg-white px-6">
         <div className="max-w-7xl mx-auto">
@@ -550,7 +644,7 @@ function TestimonialCard({ text, name, role, img }: { text: string, name: string
   return (
     <div className="p-8 rounded-3xl border border-slate-200 bg-slate-50 flex flex-col h-full">
       <div className="flex-1">
-        <p className="text-slate-700 italic mb-6">"{text}"</p>
+        <p className="text-slate-700 italic mb-6">&quot;{text}&quot;</p>
       </div>
       <div className="flex items-center gap-4">
         <img src={img} alt={name} className="w-12 h-12 rounded-full object-cover" />

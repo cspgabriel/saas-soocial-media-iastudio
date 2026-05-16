@@ -19,6 +19,7 @@ export function FloatingChatbot() {
   useEffect(() => {
     const storedKey = localStorage.getItem('gemini_api_key');
     if (storedKey) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setApiKey(storedKey);
     }
   }, []);
