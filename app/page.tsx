@@ -43,12 +43,12 @@ const competitors = [
 const faqs = [
   ["Funciona com Instagram, TikTok e LinkedIn?", "Sim. O fluxo interno já organiza conteúdo por plataforma e formato. A publicação automática depende das integrações oficiais de cada rede."],
   ["É melhor que mLabs ou Etus?", "A proposta é diferente: SocialOS foca em operação rápida com IA, briefing e aprovação. mLabs/Etus são mais maduros para publicação multi-rede tradicional."],
-  ["O que significa chave própria de IA?", "No plano grátis, o usuário pode usar a própria chave Gemini. Isso reduz custo inicial e evita cobrar caro antes do produto provar valor."],
+  ["O que significa chave própria de IA?", "No plano grátis, você usa sua própria chave Gemini. Na prática, você vê a operação funcionando antes de assumir uma mensalidade."],
   ["Posso cancelar quando quiser?", "Sim. A oferta deve ser sem contrato longo no Free e Pro. O plano Agency pode ter contrato dedicado."],
   ["Tem relatório para cliente?", "Sim. O módulo de relatórios gera um resumo operacional copiável, com posts, aprovações e campanhas."],
   ["Tem aprovação por cliente?", "O fluxo interno já tem status de aprovação. O próximo passo é gerar link público de aprovação por cliente via Firestore/Auth."],
   ["A IA publica sozinha?", "Não por padrão. A IA acelera criação e estratégia. Publicação automática entra depois com integrações oficiais."],
-  ["Serve para freelancer?", "Sim. O produto foi pensado para freelancer e agência pequena que precisa atender mais clientes com menos troca de contexto."],
+  ["Serve para freelancer?", "Sim. O produto foi pensado para freelancer e agência pequena que quer parecer mais organizada, responder mais rápido e vender uma operação mais profissional."],
   ["Tem garantia?", "A promessa comercial recomendada é 14 dias grátis e garantia de 30 dias no plano pago."],
   ["Meus dados ficam onde?", "Hoje a demo usa armazenamento local no navegador. Em produção, a camada certa é Firebase Auth + Firestore com regras de segurança."],
 ];
@@ -181,8 +181,8 @@ function ExitIntent() {
       <div className="max-w-md rounded-[8px] bg-white p-6 shadow-2xl">
         <button onClick={() => setOpen(false)} className="float-right rounded-md p-1 text-slate-500 hover:bg-slate-100"><X className="h-4 w-4" /></button>
         <p className="text-xs font-black uppercase tracking-[0.18em] text-rose-600">Antes de sair</p>
-        <h3 className="mt-2 text-2xl font-black text-slate-950">Leve um calendário editorial grátis</h3>
-        <p className="mt-2 text-sm leading-6 text-slate-600">Use como isca rápida para captar social medias e validar demanda antes do checkout.</p>
+        <h3 className="mt-2 text-2xl font-black text-slate-950">Não saia sem um ativo para vender amanhã</h3>
+        <p className="mt-2 text-sm leading-6 text-slate-600">Leve um calendário editorial pronto para mostrar valor ao cliente antes mesmo da primeira reunião.</p>
         <div className="mt-4"><LeadForm compact /></div>
       </div>
     </div>
@@ -194,10 +194,10 @@ export default function LandingPage() {
   const [videoOpen, setVideoOpen] = useState(false);
 
   const plans = [
-    { name: "Free", price: "R$ 0", desc: "Para testar com sua própria chave de IA.", cta: "Criar conta grátis", href: "/cadastro?plan=free", items: ["1 usuário", "3 clientes", "30 gerações/dia", "Calendário e briefing"] },
-    { name: "Pro", price: annual ? "R$ 77" : "R$ 97", desc: "Para freelancer e agência pequena.", cta: "Começar 14 dias grátis", href: "/cadastro?plan=pro", featured: true, items: ["10 clientes", "IA gerenciada", "300 gerações/dia", "Relatório operacional"] },
-    { name: "Scale", price: annual ? "R$ 237" : "R$ 297", desc: "Para operação com vários clientes.", cta: "Escalar operação", href: "/cadastro?plan=scale", items: ["Clientes ilimitados", "1200 gerações/dia", "Multiusuário", "Campanhas e creators"] },
-    { name: "Agency", price: annual ? "R$ 557" : "R$ 697", desc: "Para whitelabel e subcontas.", cta: "Falar com vendas", href: "/cadastro?plan=agency", items: ["Whitelabel", "Domínio próprio", "Subcontas", "Migração assistida"] },
+    { name: "Free", price: "R$ 0", desc: "Para provar valor em um cliente sem pedir cartão.", cta: "Começar pelo Free", href: "/cadastro?plan=free", items: ["1 usuário", "3 clientes", "30 gerações/dia", "Calendário e briefing"] },
+    { name: "Pro", price: annual ? "R$ 77" : "R$ 97", desc: "Para virar uma operação que o cliente respeita.", cta: "Ativar meu Pro", href: "/cadastro?plan=pro", featured: true, items: ["10 clientes", "IA gerenciada", "300 gerações/dia", "Relatório operacional"] },
+    { name: "Scale", price: annual ? "R$ 237" : "R$ 297", desc: "Para crescer sem deixar aprovação e prazo escaparem.", cta: "Escalar com controle", href: "/cadastro?plan=scale", items: ["Clientes ilimitados", "1200 gerações/dia", "Multiusuário", "Campanhas e creators"] },
+    { name: "Agency", price: annual ? "R$ 557" : "R$ 697", desc: "Para vender uma estrutura com sua marca.", cta: "Montar whitelabel", href: "/cadastro?plan=agency", items: ["Whitelabel", "Domínio próprio", "Subcontas", "Migração assistida"] },
   ];
 
   const faqSchema = {
@@ -217,7 +217,6 @@ export default function LandingPage() {
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     offers: { "@type": "Offer", price: "0", priceCurrency: "BRL" },
-    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", ratingCount: "37" },
   };
 
   return (
@@ -250,15 +249,15 @@ export default function LandingPage() {
               IA para agências de social media
             </div>
             <h1 className="max-w-4xl text-5xl font-black leading-[0.95] tracking-normal text-slate-950 md:text-7xl">
-              Demita 3 ferramentas. Atenda mais clientes sem perder aprovação.
+              Tenha a operação que faz o cliente sentir que você vale mais.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600">
-              SocialOS junta briefing, calendário, IA, aprovação, campanhas e relatório em uma operação rápida para freelancers e agências pequenas.
+              SocialOS organiza briefing, calendário, IA, aprovação e relatório em um fluxo que transforma caos em segurança. Você entrega mais rápido, mostra mais controle e para de vender social media como se fosse só post.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Link href="/cadastro?plan=free">
                 <Button className="h-12 rounded-md bg-rose-600 px-6 shadow-none hover:bg-rose-700">
-                  Criar conta grátis <ArrowRight className="ml-2 h-4 w-4" />
+                  Montar minha operação grátis <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
               <button onClick={() => setVideoOpen(true)} className="inline-flex h-12 items-center justify-center rounded-md border border-slate-200 bg-white px-6 text-sm font-black text-slate-800 hover:bg-slate-50">
@@ -266,14 +265,14 @@ export default function LandingPage() {
               </button>
             </div>
             <div className="mt-6 grid max-w-2xl gap-3 sm:grid-cols-3">
-              {["Sem cartão", "14 dias grátis", "Cancela em 1 clique"].map((item) => (
+              {["Sem cartão", "Primeiro calendário em minutos", "Você vê valor antes de pagar"].map((item) => (
                 <div key={item} className="flex items-center gap-2 text-sm font-bold text-slate-600">
                   <CheckCircle2 className="h-4 w-4 text-emerald-600" /> {item}
                 </div>
               ))}
             </div>
             <div className="mt-8 rounded-[8px] border border-slate-200 bg-slate-50 p-4">
-              <p className="mb-3 text-sm font-black text-slate-800">Receba o template de calendário editorial para vender o primeiro setup:</p>
+              <p className="mb-3 text-sm font-black text-slate-800">Receba o calendário que ajuda o cliente a dizer “agora eu entendi o valor”:</p>
               <LeadForm />
             </div>
           </motion.div>
@@ -284,9 +283,9 @@ export default function LandingPage() {
 
         <section className="border-y border-slate-200 bg-slate-50">
           <div className="mx-auto max-w-7xl px-5 py-10">
-            <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-slate-500">Projetado para substituir o combo que trava a operação</p>
+            <p className="text-center text-xs font-black uppercase tracking-[0.18em] text-slate-500">O custo invisível de continuar no improviso</p>
             <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-              {["Planilha", "Trello", "ChatGPT solto", "PDF de relatório", "WhatsApp de aprovação"].map((item) => (
+              {["Cliente cobrando status", "Post esquecido", "Aprovação perdida", "Relatório feito na pressa", "IA sem contexto"].map((item) => (
                 <div key={item} className="rounded-md border border-slate-200 bg-white px-4 py-3 text-center text-sm font-black text-slate-700">{item}</div>
               ))}
             </div>
@@ -296,7 +295,7 @@ export default function LandingPage() {
         <section className="mx-auto max-w-7xl px-5 py-16">
           <div className="mb-8 max-w-2xl">
             <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-rose-700">Produto</p>
-            <h2 className="text-3xl font-black text-slate-950 md:text-4xl">Rotina real de social media, sem painel decorativo.</h2>
+            <h2 className="text-3xl font-black text-slate-950 md:text-4xl">Quando tudo fica no mesmo lugar, você para de parecer “só mais um social media”.</h2>
           </div>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             {features.map((feature) => (
@@ -312,9 +311,9 @@ export default function LandingPage() {
         <section className="border-y border-slate-200 bg-slate-950 text-white">
           <div className="mx-auto grid max-w-7xl gap-8 px-5 py-16 lg:grid-cols-3">
             {[
-              ["18h", "meta de economia semanal por agência com briefing + IA + aprovação no mesmo fluxo"],
-              ["3x", "menos troca de contexto: cliente, post e relatório ficam juntos"],
-              ["R$ 380", "economia potencial ao substituir ferramentas separadas na operação inicial"],
+              ["Controle", "o cliente vê processo, prazo e aprovação. Isso muda a percepção de valor."],
+              ["Velocidade", "ideia, copy e tarefa saem no mesmo fluxo. Menos abas abertas, menos retrabalho."],
+              ["Desejo", "a operação deixa de parecer improviso e vira algo que o cliente quer manter."],
             ].map(([value, label]) => (
               <div key={value} className="rounded-[8px] border border-slate-800 bg-slate-900 p-6">
                 <p className="text-5xl font-black text-rose-300">{value}</p>
@@ -327,8 +326,8 @@ export default function LandingPage() {
         <section id="compare" className="mx-auto max-w-7xl px-5 py-16">
           <div className="mb-8 max-w-2xl">
             <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-blue-700">Comparativo</p>
-            <h2 className="text-3xl font-black md:text-4xl">SocialOS vs mLabs vs Etus vs ChatGPT.</h2>
-            <p className="mt-3 text-sm leading-6 text-slate-600">Concorrentes maduros são bons. A aposta do SocialOS é velocidade operacional com IA e briefing no centro.</p>
+            <h2 className="text-3xl font-black md:text-4xl">O lead compra a certeza de que amanhã não vai virar cobrança, atraso e retrabalho.</h2>
+            <p className="mt-3 text-sm leading-6 text-slate-600">Se ele fecha esta página e volta para planilha, WhatsApp e IA solta, o problema continua do mesmo tamanho. SocialOS entrega a sensação de operação pronta.</p>
           </div>
           <div className="overflow-x-auto rounded-[8px] border border-slate-200">
             <table className="w-full min-w-[760px] text-left text-sm">
@@ -358,13 +357,13 @@ export default function LandingPage() {
           <div className="mx-auto max-w-7xl px-5 py-16">
             <div className="mb-8 max-w-2xl">
               <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-rose-700">Como funciona</p>
-              <h2 className="text-3xl font-black md:text-4xl">Três passos para tirar o conteúdo do caos.</h2>
+              <h2 className="text-3xl font-black md:text-4xl">Três passos para o cliente sentir que está em boas mãos.</h2>
             </div>
             <div className="grid gap-4 lg:grid-cols-3">
               {[
-                ["1", "Cadastre o cliente", "Oferta, público, tom de voz, restrições e plano mensal."],
-                ["2", "Gere a pauta com IA", "Ideias, legendas, carrosséis e campanhas com contexto."],
-                ["3", "Aprove e reporte", "Fila por status e relatório copiável para reunião."],
+                ["1", "Mostre que você entendeu o negócio", "Oferta, público, tom de voz, restrições e plano mensal ficam documentados."],
+                ["2", "Entregue uma pauta que parece pensada", "Ideias, legendas, carrosséis e campanhas nascem com contexto, não do zero."],
+                ["3", "Dê tranquilidade toda semana", "Fila por status e relatório copiável reduzem cobrança e aumentam confiança."],
               ].map(([step, title, text]) => (
                 <div key={step} className="rounded-[8px] border border-slate-200 bg-white p-6">
                   <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-md bg-slate-950 text-lg font-black text-white">{step}</div>
@@ -381,8 +380,8 @@ export default function LandingPage() {
             <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div className="max-w-2xl">
                 <p className="mb-2 text-xs font-black uppercase tracking-[0.18em] text-rose-300">Planos</p>
-                <h2 className="text-3xl font-black md:text-4xl">Grátis para entrar. Pago para escalar.</h2>
-                <p className="mt-3 text-sm text-slate-300">Ancoragem: juntar gerenciador + IA + tarefas + relatório pode passar de R$ 1.000/mês em ferramentas separadas.</p>
+                <h2 className="text-3xl font-black md:text-4xl">Comece sem risco. Continue quando perceber que voltar ao improviso custa mais.</h2>
+                <p className="mt-3 text-sm text-slate-300">A conta não é só mensalidade. É retrabalho, atraso, cobrança do cliente e horas que poderiam virar retenção.</p>
               </div>
               <div className="flex w-fit rounded-md border border-slate-700 bg-slate-900 p-1">
                 <button onClick={() => setAnnual(false)} className={`rounded px-4 py-2 text-sm font-black ${!annual ? "bg-white text-slate-950" : "text-slate-400"}`}>Mensal</button>
@@ -452,7 +451,7 @@ export default function LandingPage() {
 
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-slate-200 bg-white/95 p-3 backdrop-blur">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm font-bold text-slate-700">Quer validar com cliente real ainda hoje?</p>
+          <p className="text-sm font-bold text-slate-700">Saia daqui com uma operação que você já pode mostrar para um cliente.</p>
           <div className="flex gap-2">
             <button onClick={() => setVideoOpen(true)} className="rounded-md border border-slate-200 px-4 py-2 text-sm font-black">Ver demo</button>
             <Link href="/cadastro?plan=free"><Button className="rounded-md bg-rose-600 shadow-none hover:bg-rose-700">Criar conta grátis</Button></Link>

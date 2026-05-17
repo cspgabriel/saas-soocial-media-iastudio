@@ -28,10 +28,10 @@ export default function Image() {
           <div style={{ fontSize: 38, fontWeight: 900 }}>SocialOS</div>
         </div>
         <div style={{ fontSize: 76, lineHeight: 0.98, fontWeight: 900, maxWidth: 900 }}>
-          IA para agências de social media
+          A operação que faz o cliente sentir que você vale mais
         </div>
         <div style={{ marginTop: 28, fontSize: 32, color: '#CBD5E1', maxWidth: 880 }}>
-          Briefing, calendário, aprovação e relatórios em uma operação rápida.
+          Briefing, calendário, IA, aprovação e relatório sem improviso.
         </div>
       </div>
     ),
