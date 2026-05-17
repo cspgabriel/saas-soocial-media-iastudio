@@ -235,6 +235,7 @@ export default function LandingPage() {
             <a href="#compare">Comparativo</a>
             <a href="#pricing">Planos</a>
             <a href="#faq">FAQ</a>
+            <Link href="/blog">Blog</Link>
           </div>
           <Link href="/cadastro?plan=free">
             <Button className="rounded-md bg-rose-600 px-5 shadow-none hover:bg-rose-700">Criar conta grátis</Button>
