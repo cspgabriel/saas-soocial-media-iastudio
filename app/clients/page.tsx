@@ -1,89 +1,78 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Layout } from '@/components/Layout';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Search, Plus, MoreVertical, FileText, CheckCircle, Clock, ChevronLeft } from 'lucide-react';
-import { motion } from 'motion/react';
-import { mockClients } from '@/app/data/mockClients';
+import { useMemo, useState } from "react";
+import { ChevronLeft, Plus, Search, Save } from "lucide-react";
+import { Layout } from "@/components/Layout";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import { Client, formatCurrency, useOpsStore } from "@/lib/opsStore";
+
+const emptyClient: Client = {
+  id: "",
+  name: "",
+  segment: "",
+  status: "Onboarding",
+  plan: "Pro 12 posts",
+  monthlyFee: 1200,
+  postsPerMonth: 12,
+  tone: "",
+  offer: "",
+  audience: "",
+  notes: "",
+};
 
 export default function ClientsPage() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedClient, setSelectedClient] = useState<typeof mockClients[0] | null>(null);
-  const [formData, setFormData] = useState({ companyInfo: '', services: '', products: '' });
+  const { state, updateClient } = useOpsStore();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selected, setSelected] = useState<Client | null>(null);
 
-  const filtered = mockClients.filter(c => c.name.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filtered = useMemo(() => {
+    const search = searchTerm.toLowerCase();
+    return state.clients.filter((client) => `${client.name} ${client.segment} ${client.status}`.toLowerCase().includes(search));
+  }, [searchTerm, state.clients]);
 
-  const handleSelectClient = (client: typeof mockClients[0]) => {
-    setSelectedClient(client);
-    setFormData({
-      companyInfo: client.companyInfo || '',
-      services: client.services || '',
-      products: client.products || ''
-    });
+  const saveClient = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!selected?.name.trim()) return;
+    updateClient({ ...selected, id: selected.id || crypto.randomUUID() });
+    setSelected(null);
   };
 
-  const handleSaveInfo = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (selectedClient) {
-      // Aqui haveria uma chamada a API para salvar as alterações.
-      alert(`Informações atualizadas para: ${selectedClient.name}`);
-    }
-  };
-
-  if (selectedClient) {
+  if (selected) {
     return (
       <Layout>
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <Button variant="ghost" className="mb-2 -ml-3 text-slate-500" onClick={() => setSelectedClient(null)}>
-              <ChevronLeft className="w-4 h-4 mr-1" /> Voltar
-            </Button>
-            <h1 className="text-2xl font-bold text-slate-800 tracking-tight flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center font-bold text-sm">
-                {selectedClient.name.charAt(0)}
-              </div>
-              {selectedClient.name}
-            </h1>
-            <p className="text-slate-500 mt-1 text-sm">Preencha as informações base deste cliente, que servirão como contexto (Briefing) para a IA.</p>
-          </div>
+        <div className="mb-6">
+          <Button variant="ghost" className="mb-2 -ml-3" onClick={() => setSelected(null)}>
+            <ChevronLeft className="mr-1 h-4 w-4" /> Voltar
+          </Button>
+          <h1 className="text-2xl font-black text-slate-900">{selected.id ? selected.name : "Novo cliente"}</h1>
+          <p className="mt-1 text-sm text-slate-500">Briefing enxuto para alimentar IA, calendario e relatorio.</p>
         </div>
 
-        <Card className="border-slate-200/60 shadow-sm max-w-3xl">
+        <Card className="max-w-5xl border-slate-200 bg-white shadow-sm">
           <CardHeader>
-            <CardTitle>Base de Conhecimento do Cliente</CardTitle>
+            <CardTitle>Contexto comercial do cliente</CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={handleSaveInfo} className="space-y-6">
+            <form onSubmit={saveClient} className="grid gap-5 lg:grid-cols-2">
+              <Field label="Nome" value={selected.name} onChange={(value) => setSelected({ ...selected, name: value })} />
+              <Field label="Nicho" value={selected.segment} onChange={(value) => setSelected({ ...selected, segment: value })} />
+              <Field label="Plano" value={selected.plan} onChange={(value) => setSelected({ ...selected, plan: value })} />
+              <Field label="Mensalidade" type="number" value={String(selected.monthlyFee)} onChange={(value) => setSelected({ ...selected, monthlyFee: Number(value) })} />
+              <Field label="Posts por mes" type="number" value={String(selected.postsPerMonth)} onChange={(value) => setSelected({ ...selected, postsPerMonth: Number(value) })} />
               <div>
-                <label className="block text-sm font-semibold text-slate-800 mb-2">Sobre a Empresa (O que faz, qual a promessa, tom de voz)</label>
-                <textarea 
-                  value={formData.companyInfo}
-                  onChange={e => setFormData({...formData, companyInfo: e.target.value})}
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 min-h-[100px]"
-                  placeholder="Descreva a empresa..."
-                />
+                <label className="mb-2 block text-sm font-bold text-slate-700">Status</label>
+                <select value={selected.status} onChange={(event) => setSelected({ ...selected, status: event.target.value as Client["status"] })} className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm">
+                  <option>Ativo</option>
+                  <option>Onboarding</option>
+                  <option>Pausado</option>
+                </select>
               </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-800 mb-2">Serviços Oferecidos</label>
-                <textarea 
-                  value={formData.services}
-                  onChange={e => setFormData({...formData, services: e.target.value})}
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 min-h-[80px]"
-                  placeholder="Quais serviços a empresa presta?"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-800 mb-2">Produtos Oferecidos</label>
-                <textarea 
-                  value={formData.products}
-                  onChange={e => setFormData({...formData, products: e.target.value})}
-                  className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500/30 min-h-[80px]"
-                  placeholder="Quais produtos físicos ou infoprodutos são vendidos?"
-                />
-              </div>
-              <div className="flex justify-end">
-                <Button type="submit" className="bg-teal-600 hover:bg-teal-700 text-white rounded-xl h-11 px-8">Salvar Informações</Button>
+              <TextArea label="Oferta principal" value={selected.offer} onChange={(value) => setSelected({ ...selected, offer: value })} />
+              <TextArea label="Publico e dor" value={selected.audience} onChange={(value) => setSelected({ ...selected, audience: value })} />
+              <TextArea label="Tom de voz" value={selected.tone} onChange={(value) => setSelected({ ...selected, tone: value })} />
+              <TextArea label="Regras e observacoes" value={selected.notes} onChange={(value) => setSelected({ ...selected, notes: value })} />
+              <div className="lg:col-span-2 flex justify-end">
+                <Button type="submit"><Save className="mr-2 h-4 w-4" /> Salvar cliente</Button>
               </div>
             </form>
           </CardContent>
@@ -94,87 +83,67 @@ export default function ClientsPage() {
 
   return (
     <Layout>
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Clientes & Contratos</h1>
-          <p className="text-slate-500 mt-0.5 text-sm">Gerencie a base de clientes da sua agência.</p>
+          <h1 className="text-2xl font-black text-slate-900">Clientes</h1>
+          <p className="mt-1 text-sm text-slate-500">Base de briefing e cobranca. Tudo que a IA precisa saber fica aqui.</p>
         </div>
-        <Button variant="primary" className="shrink-0"><Plus className="w-4 h-4 mr-2"/> Novo Cliente</Button>
+        <Button onClick={() => setSelected(emptyClient)}><Plus className="mr-2 h-4 w-4" /> Novo cliente</Button>
       </div>
 
-      <Card className="mb-8 border-slate-200/60 shadow-sm">
-        <div className="p-4 border-b border-slate-200/60 flex flex-col sm:flex-row gap-4 bg-slate-50/50">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 group-focus-within:text-teal-600 transition-colors" />
-            <input 
-              type="text" 
-              placeholder="Buscar cliente..." 
-              className="w-full pl-10 pr-4 py-2 rounded-xl border border-slate-200 bg-white text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all text-sm"
-              value={searchTerm}
-              onChange={e => setSearchTerm(e.target.value)}
-            />
+      <Card className="border-slate-200 bg-white shadow-sm">
+        <div className="border-b border-slate-200 bg-slate-50 p-4">
+          <div className="relative max-w-xl">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+            <input value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} placeholder="Buscar por cliente, nicho ou status" className="w-full rounded-md border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm outline-none focus:border-rose-400" />
           </div>
-          <select className="border border-slate-200 bg-white text-slate-700 rounded-xl px-4 py-2 focus:outline-none focus:ring-1 focus:ring-teal-500/50 focus:border-teal-500/50 focus:bg-slate-50 text-sm appearance-none cursor-pointer">
-            <option>Todos os Status</option>
-            <option>Ativos</option>
-            <option>Em Onboarding</option>
-          </select>
         </div>
-        
-        <div className="overflow-x-auto bg-white/50">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-slate-200/60 text-xs text-slate-500 uppercase tracking-wider bg-slate-50/50">
-                <th className="px-6 py-4 font-semibold">Cliente</th>
-                <th className="px-6 py-4 font-semibold">Status</th>
-                <th className="px-6 py-4 font-semibold">Plano Atual</th>
-                <th className="px-6 py-4 font-semibold">Próxima Renovação</th>
-                <th className="px-6 py-4 font-semibold text-right">Ações</th>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead className="border-b border-slate-200 bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
+              <tr>
+                <th className="px-5 py-3">Cliente</th>
+                <th className="px-5 py-3">Status</th>
+                <th className="px-5 py-3">Plano</th>
+                <th className="px-5 py-3">Posts/mes</th>
+                <th className="px-5 py-3">MRR</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {filtered.map((client, i) => (
-                <motion.tr 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: i * 0.05 }}
-                  key={client.id} 
-                  className="hover:bg-slate-50 transition-colors cursor-pointer"
-                  onClick={() => handleSelectClient(client)}
-                >
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex flex-col items-center justify-center font-bold border border-teal-100 shadow-sm">
-                        {client.name.charAt(0)}
-                      </div>
-                      <div>
-                        <p className="font-medium text-slate-800">{client.name}</p>
-                        {client.unread > 0 && (
-                          <span className="text-[10px] text-amber-600 font-medium tracking-wide">{client.unread} aprovações pendentes</span>
-                        )}
-                      </div>
-                    </div>
+              {filtered.map((client) => (
+                <tr key={client.id} className="cursor-pointer hover:bg-slate-50" onClick={() => setSelected(client)}>
+                  <td className="px-5 py-4">
+                    <p className="font-black text-slate-900">{client.name}</p>
+                    <p className="text-xs text-slate-500">{client.segment} - {client.offer}</p>
                   </td>
-                  <td className="px-6 py-4">
-                    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border
-                      ${client.status === 'Ativo' ? 'bg-teal-50 text-teal-700 border-teal-200' : ''}
-                      ${client.status === 'Onboarding' ? 'bg-blue-50 text-blue-700 border-blue-200' : ''}
-                      ${client.status === 'Inativo' ? 'bg-slate-100 text-slate-500 border-slate-200' : ''}
-                    `}>
-                      {client.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-slate-500 text-sm">{client.plan}</td>
-                  <td className="px-6 py-4 text-slate-500 text-sm">{client.nextRenew}</td>
-                  <td className="px-6 py-4 text-right">
-                    <Button variant="ghost" className="p-2 aspect-square text-slate-400 hover:text-slate-700"><MoreVertical className="w-4 h-4" /></Button>
-                  </td>
-                </motion.tr>
+                  <td className="px-5 py-4"><span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-bold">{client.status}</span></td>
+                  <td className="px-5 py-4 text-slate-600">{client.plan}</td>
+                  <td className="px-5 py-4 text-slate-600">{client.postsPerMonth}</td>
+                  <td className="px-5 py-4 font-bold text-slate-900">{formatCurrency(client.monthlyFee)}</td>
+                </tr>
               ))}
             </tbody>
           </table>
         </div>
       </Card>
     </Layout>
+  );
+}
+
+function Field({ label, value, onChange, type = "text" }: { label: string; value: string; onChange: (value: string) => void; type?: string }) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-bold text-slate-700">{label}</label>
+      <input type={type} value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-rose-400" />
+    </div>
+  );
+}
+
+function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
+  return (
+    <div>
+      <label className="mb-2 block text-sm font-bold text-slate-700">{label}</label>
+      <textarea value={value} onChange={(event) => onChange(event.target.value)} className="min-h-24 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-rose-400" />
+    </div>
   );
 }

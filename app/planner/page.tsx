@@ -1,161 +1,114 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Layout } from '@/components/Layout';
-import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { CalendarDays, Filter, ChevronLeft, ChevronRight, Image as ImageIcon, Send, Clock, Plus } from 'lucide-react';
+import { useMemo, useState } from "react";
+import { CalendarDays, Check, Plus } from "lucide-react";
+import { Layout } from "@/components/Layout";
+import { Button, Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
+import { PostItem, useOpsStore } from "@/lib/opsStore";
+
+const emptyPost: Omit<PostItem, "id"> = {
+  clientId: "",
+  title: "",
+  platform: "Instagram",
+  format: "Feed",
+  date: new Date().toISOString().slice(0, 10),
+  time: "09:00",
+  status: "Ideia",
+  objective: "",
+};
+
+const columns: PostItem["status"][] = ["Ideia", "Criando", "Aprovar", "Aprovado", "Publicado"];
 
 export default function PlannerPage() {
-  const dt = new Date();
-  const currentMonth = dt.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-  const [activeTab, setActiveTab] = useState<'calendar' | 'list'>('calendar');
+  const { state, addPost, updatePost } = useOpsStore();
+  const [clientFilter, setClientFilter] = useState("all");
+  const [form, setForm] = useState<Omit<PostItem, "id">>({ ...emptyPost, clientId: state.clients[0]?.id || "" });
 
-  // Simple mock grid
-  const days = Array.from({length: 30}, (_, i) => i + 1);
+  const posts = useMemo(() => {
+    return state.posts
+      .filter((post) => clientFilter === "all" || post.clientId === clientFilter)
+      .sort((a, b) => `${a.date} ${a.time}`.localeCompare(`${b.date} ${b.time}`));
+  }, [clientFilter, state.posts]);
+
+  const submit = (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!form.title.trim() || !form.clientId) return;
+    addPost(form);
+    setForm({ ...emptyPost, clientId: form.clientId });
+  };
 
   return (
     <Layout>
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Planejamento e Agendamento</h1>
-          <p className="text-slate-500 mt-0.5 text-sm">Organize visualmente as postagens de todos os seus clientes.</p>
+          <h1 className="flex items-center gap-2 text-2xl font-black text-slate-900"><CalendarDays className="h-6 w-6 text-rose-600" /> Calendario operacional</h1>
+          <p className="mt-1 text-sm text-slate-500">Fluxo simples: ideia, criacao, aprovacao, aprovado, publicado.</p>
         </div>
-        <div className="flex gap-2">
-          <select className="border border-slate-200 bg-white text-slate-700 rounded-xl px-4 py-2 text-sm font-medium focus:outline-none focus:border-teal-500/50 appearance-none cursor-pointer shadow-sm">
-            <option>Todos os Clientes</option>
-            <option>Cafeteria Blend</option>
-            <option>TechStart Inc</option>
-          </select>
-          <Button variant="primary" className="shadow-md shadow-teal-500/20"><Plus className="w-4 h-4 mr-2" /> Novo Post</Button>
-        </div>
+        <select value={clientFilter} onChange={(event) => setClientFilter(event.target.value)} className="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm">
+          <option value="all">Todos os clientes</option>
+          {state.clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}
+        </select>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 min-h-[700px]">
-        {/* Sidebar/Unscheduled Area */}
-        <div className="w-full lg:w-72 flex flex-col gap-4">
-          <Card className="flex-1 bg-slate-50 border-slate-200 shadow-sm border-dashed">
-            <CardHeader className="pb-3 border-b border-slate-200">
-              <CardTitle className="text-sm font-bold text-slate-700 flex items-center justify-between">
-                <span>Rascunhos</span>
-                <span className="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full text-[10px]">3</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-4 space-y-3">
-              {[1,2,3].map(i => (
-                <div key={i} className="bg-white p-3 rounded-xl border border-slate-200 shadow-sm cursor-grab hover:border-teal-300 transition-colors group">
-                  <div className="flex gap-2 mb-2">
-                    <div className="w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center shrink-0">
-                      <ImageIcon className="w-4 h-4 text-slate-400 group-hover:text-teal-500 transition-colors" />
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-slate-700 line-clamp-1">Post Carrossel Dicas</p>
-                      <p className="text-[10px] text-slate-500">Cafeteria Blend</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-1 mt-2 border-t border-slate-50 pt-2">
-                     <div className="w-4 h-4 rounded-full bg-teal-100 flex items-center justify-center">
-                       <span className="text-[8px] font-bold text-teal-700">IG</span>
-                     </div>
-                     <span className="text-[10px] text-slate-400 font-medium">Sem data</span>
-                  </div>
-                </div>
-              ))}
-              <Button variant="outline" className="w-full text-xs border-dashed bg-transparent hover:bg-slate-100 text-slate-500">
-                + Adicionar Rascunho
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Main Calendar View */}
-        <Card className="flex flex-col flex-1 overflow-hidden border-slate-200 shadow-sm bg-white">
-          <div className="border-b border-slate-100 p-4 flex items-center justify-between sticky top-0 z-10">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center p-1 bg-slate-100 rounded-lg">
-                <button 
-                  onClick={() => setActiveTab('calendar')}
-                  className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${activeTab === 'calendar' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                  Mês
-                </button>
-                <button 
-                  onClick={() => setActiveTab('list')}
-                  className={`px-4 py-1.5 text-sm font-semibold rounded-md transition-all ${activeTab === 'list' ? 'bg-white text-slate-800 shadow-sm' : 'text-slate-500 hover:text-slate-700'}`}
-                >
-                  Semana
-                </button>
+      <div className="grid gap-4 xl:grid-cols-[360px_1fr]">
+        <Card className="h-max border-slate-200 bg-white shadow-sm">
+          <CardHeader><CardTitle>Novo post rapido</CardTitle></CardHeader>
+          <CardContent>
+            <form onSubmit={submit} className="space-y-3">
+              <select value={form.clientId} onChange={(event) => setForm({ ...form, clientId: event.target.value })} className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm">
+                <option value="">Cliente</option>
+                {state.clients.map((client) => <option key={client.id} value={client.id}>{client.name}</option>)}
+              </select>
+              <input value={form.title} onChange={(event) => setForm({ ...form, title: event.target.value })} placeholder="Titulo do post" className="w-full rounded-md border border-slate-200 px-3 py-2 text-sm" />
+              <textarea value={form.objective} onChange={(event) => setForm({ ...form, objective: event.target.value })} placeholder="Objetivo: lead, autoridade, oferta, prova social..." className="min-h-20 w-full rounded-md border border-slate-200 px-3 py-2 text-sm" />
+              <div className="grid grid-cols-2 gap-2">
+                <select value={form.platform} onChange={(event) => setForm({ ...form, platform: event.target.value as PostItem["platform"] })} className="rounded-md border border-slate-200 px-3 py-2 text-sm">
+                  <option>Instagram</option><option>LinkedIn</option><option>TikTok</option><option>YouTube</option>
+                </select>
+                <select value={form.format} onChange={(event) => setForm({ ...form, format: event.target.value as PostItem["format"] })} className="rounded-md border border-slate-200 px-3 py-2 text-sm">
+                  <option>Feed</option><option>Reels</option><option>Stories</option><option>Carrossel</option><option>Shorts</option>
+                </select>
+                <input type="date" value={form.date} onChange={(event) => setForm({ ...form, date: event.target.value })} className="rounded-md border border-slate-200 px-3 py-2 text-sm" />
+                <input type="time" value={form.time} onChange={(event) => setForm({ ...form, time: event.target.value })} className="rounded-md border border-slate-200 px-3 py-2 text-sm" />
               </div>
-            </div>
-
-            <div className="flex items-center gap-6">
-              <div className="flex gap-2 items-center">
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors"><ChevronLeft className="w-5 h-5"/></button>
-                <span className="flex items-center px-2 font-bold capitalize text-slate-800 tracking-wide min-w-[140px] justify-center">{currentMonth}</span>
-                <button className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-50 rounded-md transition-colors"><ChevronRight className="w-5 h-5"/></button>
-              </div>
-              <Button variant="outline" className="text-sm px-3 h-9 hidden sm:flex"><Filter className="w-4 h-4 mr-2" /> Filtros</Button>
-            </div>
-          </div>
-
-          {/* Calendar Grid View */}
-          {activeTab === 'calendar' && (
-            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300 p-4 bg-slate-50/30">
-              <div className="grid grid-cols-7 gap-3">
-                {['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'].map(d => (
-                  <div key={d} className="py-2 text-center text-[11px] font-bold text-slate-500 tracking-widest border-b border-slate-200 mb-2">
-                    {d}
-                  </div>
-                ))}
-                
-                {/* Padding for offset (mocking) - 2 empty spaces */}
-                <div className="bg-transparent min-h-[140px] rounded-xl border border-transparent" />
-                <div className="bg-transparent min-h-[140px] rounded-xl border border-transparent" />
-                
-                {days.map(day => {
-                  const hasPost = day % 4 === 0;
-                  const requiresApproval = day % 7 === 0;
-                  const isToday = day === 17;
-                  
-                  return (
-                    <div key={day} className={`rounded-xl min-h-[160px] p-2.5 transition-all group flex flex-col gap-2 ${isToday ? 'bg-teal-50/30 border-2 border-teal-500 shadow-sm' : 'bg-white border border-slate-200 hover:border-slate-300 hover:shadow-md'}`}>
-                      <div className="flex justify-between items-center px-1">
-                        <span className={`w-7 h-7 flex items-center justify-center rounded-full text-xs font-bold ${isToday ? 'bg-teal-500 text-white' : 'text-slate-600 group-hover:bg-slate-100'}`}>
-                          {day}
-                        </span>
-                        <button className="opacity-0 group-hover:opacity-100 w-6 h-6 rounded flex items-center justify-center hover:bg-slate-100 text-slate-400 transition-opacity">
-                          <Plus className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-
-                      <div className="flex-1 space-y-2 mt-1">
-                        {hasPost && (
-                          <div className="bg-white border border-slate-200 rounded-lg p-2.5 cursor-grab hover:border-teal-400 hover:shadow-sm transition-all group/card shadow-sm">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center gap-1.5">
-                                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                                <span className="font-bold text-slate-800 text-[10px] uppercase">IG</span>
-                              </div>
-                              <span className="text-[10px] font-medium text-slate-400 flex items-center"><Clock className="w-3 h-3 mr-0.5"/> 18:00</span>
-                            </div>
-                            <p className="text-[11px] font-medium text-slate-600 line-clamp-2 leading-tight">Post Carrossel de Dia das Mães</p>
-                          </div>
-                        )}
-                        {requiresApproval && (
-                          <div className="bg-amber-50 border border-amber-200 rounded-lg p-2.5 cursor-grab hover:border-amber-300 transition-all shadow-sm">
-                            <div className="flex items-center justify-between mb-1.5">
-                              <span className="text-[9px] font-bold text-amber-700 bg-amber-100/80 px-1.5 py-0.5 rounded tracking-wide uppercase">Aprovação</span>
-                            </div>
-                            <p className="text-[11px] font-medium text-slate-700 line-clamp-1 leading-tight">Reels Sorteio</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
-          )}
+              <Button type="submit" className="w-full"><Plus className="mr-2 h-4 w-4" /> Criar post</Button>
+            </form>
+          </CardContent>
         </Card>
+
+        <div className="grid gap-3 lg:grid-cols-5">
+          {columns.map((status) => (
+            <Card key={status} className="min-h-[520px] border-slate-200 bg-slate-50 shadow-sm">
+              <CardHeader className="px-4 py-3">
+                <CardTitle className="flex items-center justify-between text-sm">
+                  {status}
+                  <span className="rounded-full bg-white px-2 py-0.5 text-xs">{posts.filter((post) => post.status === status).length}</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 p-3">
+                {posts.filter((post) => post.status === status).map((post) => {
+                  const client = state.clients.find((item) => item.id === post.clientId);
+                  return (
+                    <div key={post.id} className="rounded-md border border-slate-200 bg-white p-3 shadow-sm">
+                      <p className="text-sm font-black text-slate-900">{post.title}</p>
+                      <p className="mt-1 text-xs font-semibold text-slate-500">{client?.name}</p>
+                      <p className="mt-1 text-xs text-slate-500">{post.platform} - {post.format}</p>
+                      <p className="mt-1 text-xs text-slate-500">{post.date} {post.time}</p>
+                      <p className="mt-2 text-xs text-slate-600">{post.objective}</p>
+                      <div className="mt-3 grid grid-cols-2 gap-2">
+                        {columns.map((next) => (
+                          <button key={next} onClick={() => updatePost(post.id, { status: next })} className={`rounded-md px-2 py-1 text-[10px] font-bold ${next === status ? "bg-rose-600 text-white" : "bg-slate-100 text-slate-600"}`}>
+                            {next === status ? <Check className="mx-auto h-3 w-3" /> : next}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </Layout>
   );

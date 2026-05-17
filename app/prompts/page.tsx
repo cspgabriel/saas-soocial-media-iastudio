@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Sparkles, Copy, CheckCircle2, ExternalLink } from 'lucide-react';
+import { Sparkles, Copy, CheckCircle2, Bot, Gem } from 'lucide-react';
 
 const promptLibrary = [
   {
@@ -76,11 +76,11 @@ export default function PromptsPage() {
                 <p className="text-[11px] font-semibold tracking-wider text-slate-400 uppercase mb-2">Usar este prompt em:</p>
                 <div className="flex flex-wrap gap-2">
                   <Button variant="outline" className="h-8 text-xs bg-white hover:bg-slate-50" onClick={() => openAI('https://chatgpt.com')}>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg" className="w-4 h-4 mr-2" alt="ChatGPT" />
+                    <Bot className="w-4 h-4 mr-2" />
                     ChatGPT
                   </Button>
                   <Button variant="outline" className="h-8 text-xs bg-white hover:bg-slate-50" onClick={() => openAI('https://gemini.google.com')}>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg" className="w-4 h-4 mr-2" alt="Gemini" />
+                    <Gem className="w-4 h-4 mr-2" />
                     Gemini
                   </Button>
                   <Button variant="outline" className="h-8 text-xs bg-white hover:bg-slate-50" onClick={() => openAI('https://claude.ai')}>
