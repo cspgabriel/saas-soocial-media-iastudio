@@ -1,6 +1,0 @@
-{
-  "name": "SocialMediaOS",
-  "description": "All-in-one SaaS for Social Media Managers with CRM, Planner, Reports, and AI tools.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
