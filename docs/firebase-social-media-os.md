@@ -3,6 +3,8 @@
 ## Projeto
 
 - Project ID: `social-media-os-88b4c`
+- Web App ID: `1:460148721986:web:76eae830ee2040082d20db`
+- Analytics Measurement ID: `G-4282P1D172`
 - Service account local: `C:\Users\cspga\Downloads\social-media-os-88b4c-firebase-adminsdk-fbsvc-bad02cb394.json`
 - Service account email: `firebase-adminsdk-fbsvc@social-media-os-88b4c.iam.gserviceaccount.com`
 
@@ -18,6 +20,8 @@
 
 - A chave JSON existe localmente e aponta para `social-media-os-88b4c`.
 - `.firebaserc` foi criado apontando `default` para `social-media-os-88b4c`.
+- Firebase Web SDK foi configurado em `lib/firebase.ts` usando variaveis `NEXT_PUBLIC_FIREBASE_*`.
+- `FirebaseProvider` inicializa Analytics no client quando suportado pelo navegador.
 - `firebase apps:list --project social-media-os-88b4c` retornou `403` com a conta CLI atual.
 
 ## Pendencia

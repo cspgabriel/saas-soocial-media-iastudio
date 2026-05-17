@@ -1,5 +1,6 @@
 import type {Metadata} from 'next';
 import { Plus_Jakarta_Sans } from 'next/font/google';
+import { FirebaseProvider } from '@/components/FirebaseProvider';
 import './globals.css'; // Global styles
 
 const jakarta = Plus_Jakarta_Sans({
@@ -26,7 +27,9 @@ export const viewport = {
 export default function RootLayout({children}: {children: React.ReactNode}) {
   return (
     <html lang="pt-BR">
-      <body suppressHydrationWarning className={`${jakarta.className} antialiased`}>{children}</body>
+      <body suppressHydrationWarning className={`${jakarta.className} antialiased`}>
+        <FirebaseProvider>{children}</FirebaseProvider>
+      </body>
     </html>
   );
 }
