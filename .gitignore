@@ -4,5 +4,7 @@ coverage/
 .DS_Store
 *.log
 *.tsbuildinfo
+*firebase-adminsdk*.json
+service-account*.json
 .env*
 !.env.example

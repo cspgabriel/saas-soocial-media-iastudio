@@ -4,9 +4,11 @@
 
 - Repo restaurado para Next.js funcional. O commit anterior na `main` apagava o app e quebrava `npm run build`.
 - Firebase CLI autenticado e projetos listados.
-- Nao existia projeto Firebase com nome SocialOS/social media.
-- Tentativa de criar `socialos-cspgabriel` falhou por quota de projetos Google Cloud.
-- Existem projetos `studio-8055294696-42192` e `studio-143590140-45ff0` com Web Apps ativos, mas nao ha evidencia suficiente de que um deles e o projeto oficial deste repo.
+- Projeto Firebase criado pelo usuario: `social-media-os-88b4c`.
+- Service account local recebida em `C:\Users\cspga\Downloads\social-media-os-88b4c-firebase-adminsdk-fbsvc-bad02cb394.json`.
+- A chave de servico nao deve ser commitada. O repo ignora `*firebase-adminsdk*.json`.
+- `.firebaserc` aponta o projeto default para `social-media-os-88b4c`.
+- Validacao via Firebase CLI ainda retornou `403` na conta CLI atual (`cspgabriel@outlook.com.br`), entao falta conceder permissao de acesso ao projeto para essa conta ou relogar com a conta dona do projeto.
 
 ## Free vs pago
 
@@ -41,7 +43,7 @@ Observacao operacional:
 
 ## Proximos P0
 
-1. Escolher/criar projeto Firebase oficial para SocialOS.
+1. Conceder permissao no Firebase/GCP para `cspgabriel@outlook.com.br` no projeto `social-media-os-88b4c`.
 2. Ativar Auth, Firestore e Hosting/App Hosting no projeto correto.
 3. Persistir clientes, configuracoes e usage quota no Firestore.
 4. Adicionar checkout/billing para alternar `free`, `pro`, `scale`.
