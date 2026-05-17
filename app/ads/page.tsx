@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/u
 import { Megaphone, LayoutGrid, Loader2, User } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { mockClients } from '@/app/data/mockClients';
+import { getAiRequestHeaders } from '@/lib/clientSettings';
 
 export default function AdsPage() {
   const [platform, setPlatform] = useState('Meta Ads');
@@ -50,7 +51,7 @@ export default function AdsPage() {
     try {
       const response = await fetch('/api/generate-ads', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAiRequestHeaders(),
         body: JSON.stringify({ platform, ...formData })
       });
       const data = await response.json();

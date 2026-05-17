@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { MessageCircle, X, Send, Sparkles, Key, Bot } from 'lucide-react';
 import { Button } from './ui';
 import Markdown from 'react-markdown';
+import { getAiRequestHeaders } from '@/lib/clientSettings';
 
 export function FloatingChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,7 +18,7 @@ export function FloatingChatbot() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const storedKey = localStorage.getItem('gemini_api_key');
+    const storedKey = localStorage.getItem('socialos_gemini_key') || localStorage.getItem('gemini_api_key');
     if (storedKey) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setApiKey(storedKey);
@@ -33,7 +34,7 @@ export function FloatingChatbot() {
   }, [messages, isOpen]);
 
   const saveKey = () => {
-    localStorage.setItem('gemini_api_key', apiKey);
+    localStorage.setItem('socialos_gemini_key', apiKey);
     setIsConfiguring(false);
   };
 
@@ -48,7 +49,7 @@ export function FloatingChatbot() {
     try {
       const response = await fetch('/api/chatbot', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAiRequestHeaders(),
         body: JSON.stringify({ message: userMessage, apiKey })
       });
 

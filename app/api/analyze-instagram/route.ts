@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
+import { enforceDailyLimit, resolveGeminiKey, resolvePlan } from "@/lib/aiAccess";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +10,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Username is required" }, { status: 400 });
     }
 
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const plan = resolvePlan(req);
+    const quota = enforceDailyLimit(req, plan);
+    if (!quota.ok) return quota.response;
+
+    const key = resolveGeminiKey(req, plan);
+    if (!key.apiKey || key.error) {
+      return NextResponse.json({ error: key.error }, { status: 402 });
+    }
+
+    const ai = new GoogleGenAI({ apiKey: key.apiKey });
 
     const prompt = `Analise o perfil do Instagram: @${username}. 
 Pesquise na internet as informações mais recentes sobre esse perfil público no Instagram usando a ferramenta de busca.
@@ -25,10 +35,15 @@ Se você não conseguir encontrar o perfil por ser privado ou inexistente, forne
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: prompt,
-      tools: [{ googleSearch: {} }],
+      config: {
+        tools: [{ googleSearch: {} }],
+      },
     });
 
-    return NextResponse.json({ text: response.text });
+    return NextResponse.json({
+      text: response.text,
+      usage: { plan, keySource: key.source, remaining: quota.remaining, limit: quota.limit },
+    });
   } catch (error) {
     console.error("Gemini API error:", error);
     return NextResponse.json({ error: "Failed to generate analysis" }, { status: 500 });

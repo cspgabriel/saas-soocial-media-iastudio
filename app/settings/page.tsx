@@ -3,13 +3,22 @@
 import { useState, useEffect } from 'react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
-import { Settings, CheckCircle2, Instagram, Link as LinkIcon, RefreshCw } from 'lucide-react';
+import { Settings, CheckCircle2, Instagram, Link as LinkIcon, RefreshCw, KeyRound, ShieldCheck } from 'lucide-react';
 import { motion } from 'motion/react';
 
 export default function SettingsPage() {
   const [isInstagramConnected, setIsInstagramConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const [plan, setPlan] = useState(() => {
+    if (typeof window === 'undefined') return 'free';
+    return localStorage.getItem('socialos_plan') || 'free';
+  });
+  const [geminiKey, setGeminiKey] = useState(() => {
+    if (typeof window === 'undefined') return '';
+    return localStorage.getItem('socialos_gemini_key') || '';
+  });
+  const [saved, setSaved] = useState(false);
 
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
@@ -59,6 +68,13 @@ export default function SettingsPage() {
     }
   };
 
+  const handleSaveAiSettings = () => {
+    localStorage.setItem('socialos_plan', plan);
+    localStorage.setItem('socialos_gemini_key', geminiKey.trim());
+    setSaved(true);
+    setTimeout(() => setSaved(false), 1800);
+  };
+
   return (
     <Layout>
       <div className="mb-6">
@@ -70,6 +86,53 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card className="border-slate-200/60 shadow-sm bg-white">
+          <CardHeader className="border-b border-slate-200/60 bg-slate-50/50">
+            <CardTitle className="flex items-center gap-2">
+              <KeyRound className="w-5 h-5 text-teal-600" />
+              IA e Limites
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-5 pt-6">
+            <div className="rounded-xl border border-teal-100 bg-teal-50 p-4 text-sm text-teal-900">
+              <div className="flex items-center gap-2 font-bold mb-1">
+                <ShieldCheck className="w-4 h-4" /> Modelo freemium pronto
+              </div>
+              <p>No plano grátis, cada cliente usa a própria chave Gemini. Nos planos pagos, o servidor usa a chave gerenciada e aplica limites por plano.</p>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Plano atual</label>
+              <select
+                value={plan}
+                onChange={(event) => setPlan(event.target.value)}
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+              >
+                <option value="free">Free BYOK - 30 gerações/dia</option>
+                <option value="pro">Pro gerenciado - 300 gerações/dia</option>
+                <option value="scale">Scale gerenciado - 1200 gerações/dia</option>
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Chave Gemini do cliente</label>
+              <input
+                type="password"
+                value={geminiKey}
+                onChange={(event) => setGeminiKey(event.target.value)}
+                placeholder="Cole sua chave Gemini aqui para usar no plano grátis"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-800 focus:outline-none focus:ring-1 focus:ring-teal-500/50"
+              />
+              <p className="mt-2 text-xs text-slate-500">A chave fica salva apenas neste navegador via localStorage.</p>
+            </div>
+
+            <Button onClick={handleSaveAiSettings} className="w-full">
+              {saved ? <CheckCircle2 className="w-4 h-4 mr-2" /> : null}
+              {saved ? 'Configuração salva' : 'Salvar IA'}
+            </Button>
+          </CardContent>
+        </Card>
+
         <Card className="border-slate-200/60 shadow-sm bg-white">
           <CardHeader className="border-b border-slate-200/60 bg-slate-50/50">
             <CardTitle className="flex items-center gap-2">

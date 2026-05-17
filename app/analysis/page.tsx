@@ -5,6 +5,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { Button } from '@/components/ui';
 import { Activity, Search, Sparkles, AlertCircle } from 'lucide-react';
 import Markdown from 'react-markdown';
+import { getAiRequestHeaders } from '@/lib/clientSettings';
 
 export default function AnalysisPage() {
   const [username, setUsername] = useState('');
@@ -28,7 +29,7 @@ export default function AnalysisPage() {
     try {
       const response = await fetch('/api/analyze-instagram', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAiRequestHeaders(),
         body: JSON.stringify({ username: cleanUsername }),
       });
 

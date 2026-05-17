@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/u
 import { Images, Loader2, FileText, Link as LinkIcon, Image as ImageIcon, User } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { mockClients } from '@/app/data/mockClients';
+import { getAiRequestHeaders } from '@/lib/clientSettings';
 
 export default function CarouselPage() {
   const [inputType, setInputType] = useState<'text' | 'url' | 'file'>('text');
@@ -43,7 +44,7 @@ export default function CarouselPage() {
     try {
       const response = await fetch('/api/generate-carousel', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAiRequestHeaders(),
         body: JSON.stringify({ sourceText: contentToSend })
       });
       const data = await response.json();

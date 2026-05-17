@@ -5,6 +5,7 @@ import { Layout } from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle, Button } from '@/components/ui';
 import { Sparkles, RefreshCw, Copy, Check } from 'lucide-react';
 import { motion } from 'motion/react';
+import { getAiRequestHeaders } from '@/lib/clientSettings';
 
 export default function AIPage() {
   const [prompt, setPrompt] = useState('');
@@ -20,13 +21,11 @@ export default function AIPage() {
     try {
       const response = await fetch('/api/gemini/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: getAiRequestHeaders(),
         body: JSON.stringify({ prompt, tone, platform }),
       });
       const data = await response.json();
-      setResult(data.text);
+      setResult(data.text || data.error || 'Erro ao gerar.');
     } catch (e) {
       console.error(e);
       setResult("Ocorreu um erro ao gerar. Verifique se a chave de API está configurada.");

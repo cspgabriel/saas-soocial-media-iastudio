@@ -1,5 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
+import { enforceDailyLimit, resolveGeminiKey, resolvePlan } from "@/lib/aiAccess";
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,7 +10,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
     }
 
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const plan = resolvePlan(req);
+    const quota = enforceDailyLimit(req, plan);
+    if (!quota.ok) return quota.response;
+
+    const key = resolveGeminiKey(req, plan);
+    if (!key.apiKey || key.error) {
+      return NextResponse.json({ error: key.error }, { status: 402 });
+    }
+
+    const ai = new GoogleGenAI({ apiKey: key.apiKey });
 
     const prompt = `Atue como um especialista em tráfego pago para ${platform}.
     Crie uma estrutura completa de campanha baseada nos seguintes dados:
@@ -31,7 +41,10 @@ export async function POST(req: NextRequest) {
       contents: prompt,
     });
 
-    return NextResponse.json({ text: response.text });
+    return NextResponse.json({
+      text: response.text,
+      usage: { plan, keySource: key.source, remaining: quota.remaining, limit: quota.limit },
+    });
   } catch (error) {
     console.error("Ads generation error:", error);
     return NextResponse.json({ error: "Erro ao gerar campanha" }, { status: 500 });
