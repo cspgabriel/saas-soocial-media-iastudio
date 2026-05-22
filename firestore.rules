@@ -1,0 +1,20 @@
+rules_version = '2';
+// TODO: deploy via `firebase deploy --only firestore:rules`
+// SECURITY: default deny + per-uid scoping. The `plan` field is server-only:
+//   - clients cannot create a doc that includes `plan`
+//   - clients cannot mutate `plan` on update
+// Only the Admin SDK (server / Cloud Functions w/ payment webhook) may write `plan`.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && !('plan' in request.resource.data);
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && !('plan' in request.resource.data.diff(resource.data).affectedKeys());
+    }
+    match /{document=**} { allow read, write: if false; }
+  }
+}

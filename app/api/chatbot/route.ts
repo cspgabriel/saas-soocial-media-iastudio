@@ -10,8 +10,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Message is required" }, { status: 400 });
     }
 
-    const plan = resolvePlan(req);
-    const quota = enforceDailyLimit(req, plan);
+    // SECURITY: server-side verified plan (Authorization: Bearer <Firebase ID token>)
+    const auth = await resolvePlan(req);
+    if (!auth.ok) return NextResponse.json({ error: auth.error }, { status: auth.status });
+    const { uid, plan } = auth;
+    const quota = enforceDailyLimit(uid, plan);
     if (!quota.ok) return quota.response;
 
     const headerKey = req.headers.get("x-gemini-api-key");
