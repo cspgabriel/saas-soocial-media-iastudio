@@ -10,8 +10,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Campos obrigatórios faltando" }, { status: 400 });
     }
 
-    const plan = resolvePlan(req);
-    const quota = enforceDailyLimit(req, plan);
+    // SECURITY: verifies Firebase ID token (Authorization: Bearer ...) and loads
+    // plan from Firestore users/{uid}.plan — NOT from the spoofable x-socialos-plan header.
+    const auth = await resolvePlan(req);
+    if (!auth.ok) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status });
+    }
+    const { uid, plan } = auth;
+
+    const quota = enforceDailyLimit(uid, plan);
     if (!quota.ok) return quota.response;
 
     const key = resolveGeminiKey(req, plan);
@@ -33,7 +40,7 @@ export async function POST(req: NextRequest) {
     1. Estrutura da Campanha (Nome, Orçamento sugerido, Estratégia de Lance)
     2. Estrutura dos Conjuntos de Anúncios/AdGroups (Segmentação, Posicionamentos, Interesses/Palavras-chave)
     3. 3 Opções de Criativos (Copys completas com Títulos, Textos Principais, Descrições e sugestão direcional do criativo visual ou vídeo).
-    
+
     Adejte os termos e estratégias ao jargão nativo utilizado especificamente pelo ${platform}.`;
 
     const response = await ai.models.generateContent({
